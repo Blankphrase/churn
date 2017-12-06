@@ -5,6 +5,6 @@ Prediction of customer churn using classical machine learning and deep learning 
 
 ## Prediction using sklearn package in python
 
-## Prediction using keras pacakge in python
+## Prediction using keras package in python
 
 ## Model stacking results
