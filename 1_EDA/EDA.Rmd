@@ -39,13 +39,13 @@ churn_impute1=churn%>%mice(method = "rf",m=1,seed=7)%>%complete(1)
 
 
 
-```{r}
+```{r,fig.width=12,fig.height=9}
 library(tabplot)
 tableplot(churn_impute1,sortCol = Churn)
 ```
 
 
-It seems that customerID and gender variable does not have a strong relationship with the target variable, churn.
+It seems that customerID does not have a strong relationship with the target variable, churn.
 
 All the other variables seem to have some relationship with the target variable. 
 
@@ -55,10 +55,25 @@ In order to feed the data to machine learning models, we will need to do some on
 ```{r}
 churn_impute1[,"customerID"]=NULL
 library(caret)
-churn_impute1_dummy=  dummyVars("Churn~.",data=churn_impute1)%>%predict(newdata=churn_impute1)%>%data.frame()
+churn_impute1_dummy=dummyVars("Churn~.",data=churn_impute1)%>%predict(newdata=churn_impute1)%>%data.frame()
+churn_impute1_dummy=cbind(Churn=churn$Churn,churn_impute1_dummy)%>%as.data.frame()
 ```
 
-Next, lwe us look at the 
 
+Let us see if there is any correlation between features. 
+
+```{r, fig.width=11,fig.height=11}
+cor(dummyVars("~.",data=churn_impute1)%>%predict(newdata=churn_impute1)%>%data.frame())%>%corrplot()
+```
+
+Last but not the least, we need to see if there is class imbalance in the target variable.
+
+```{r}
+table(churn_impute1_dummy$Churn)
+```
+
+
+
+Thus, it is clear that we need to deal with the clas imbalance in machine learning model training part. 
 
 
