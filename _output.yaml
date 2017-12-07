@@ -1,9 +1,0 @@
-html_document:
-  toc: true
-  toc_float: true
-  numer_sections: true
-  code_folding: hide
-  theme: simplex
-  highlight: haddock
-  number_sections: true
-  df_print: paged
