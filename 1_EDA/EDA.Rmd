@@ -1,0 +1,64 @@
+---
+title: "Exploratory data analysis"
+author: "Zijun Lu"
+date: "12/6/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load in the data and libraries
+
+```{r}
+library(tidyverse)
+library(data.table)
+library(mice)
+
+churn=fread("churn.csv",stringsAsFactors = FALSE)
+```
+
+```{r}
+glimpse(churn)
+```
+
+Let us look at the data to see if there is any missing value from the data.
+
+```{r}
+source("https://raw.githubusercontent.com/edwardcooper/mlmodel_select/master/miss_pct_plot.R")
+miss_pct_plot(churn)
+```
+
+It seems that there is a small amount of missing value is TotalCharges. We could use random forest to impute the data. 
+
+```{r}
+library(mice)
+churn_impute1=churn%>%mice(method = "rf",m=1,seed=7)%>%complete(1)
+```
+
+
+
+```{r}
+library(tabplot)
+tableplot(churn_impute1,sortCol = Churn)
+```
+
+
+It seems that customerID and gender variable does not have a strong relationship with the target variable, churn.
+
+All the other variables seem to have some relationship with the target variable. 
+
+In order to feed the data to machine learning models, we will need to do some one-hot-encoding. (Doing one-hot-encoding is not common in R but is common in python)
+
+
+```{r}
+churn_impute1[,"customerID"]=NULL
+library(caret)
+churn_impute1_dummy=  dummyVars("Churn~.",data=churn_impute1)%>%predict(newdata=churn_impute1)%>%data.frame()
+```
+
+Next, lwe us look at the 
+
+
+
