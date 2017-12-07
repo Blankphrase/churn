@@ -29,5 +29,7 @@ index2=createDataPartition(intermediate_churn$Churn,p=0.5,list = FALSE)
 test_churn=intermediate_churn[index2,]
 dev_churn=intermediate_churn[-index2,]
 
+
+rm(index1,index2,intermediate_churn)
 # the final output of this script is the cleaned data ready to be fed into a machine learning algorithm. 
 
