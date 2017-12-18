@@ -1,10 +1,11 @@
+# load my ml function for baseline 
 source("https://raw.githubusercontent.com/edwardcooper/mlmodel_select/master/ml_list.R")
-# load the clean data
-source("https://raw.githubusercontent.com/edwardcooper/churn/master/2_Data_Clean/data_clean_1.R")
+# load the clean data with deleted highly correlated columns.
+source("https://raw.githubusercontent.com/edwardcooper/churn/master/2_Data_Clean/data_clean_low_cor.R")
 
 params_grid2=expand.grid(sampling=c("up","down","smote","rose")
-                        ,metric=c("ROC","Accuracy","Kappa","Sens","Spec")
-                        ,method=c("glmnet","bagEarth" ,"bagFDA", "bam" , "bartMachine", "binda", "blackboost" 
+                        ,metric=c("ROC")
+                        ,method=c("glmnet","bagEarth" ,"bagFDA" , "bartMachine", "binda", "blackboost" 
                                   ,"nb","lda","pls","rpart","BstLm","bstSm","bstTree","cforest","earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag","naive_bayes","pda","qda","ranger","rda","sda","stepLDA")
                         ,search="random"
