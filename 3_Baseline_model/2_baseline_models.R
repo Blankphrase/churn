@@ -23,3 +23,19 @@ testmodels_metric_filtered=basemodels_churn2%>%ml_cv_filter(metric="ROC",mini=0.
 
 # example use of ml_cor_filter 
 low_cor_models_churn=basemodels_churn2%>%ml_cor_filter(cor_level = 0.9)
+
+###############################################
+
+params_grid2=expand.grid(sampling=c("down")
+                         ,metric=c("ROC")
+                         ,method=c("bayesglm","glm","glmStepAIC","C5.0","C5.0Rules","C5.0Tree","rf","RRFglobal","wsrf","glmnet"
+                                   ,"bagEarth" ,"bagFDA","bartMachine", "binda","blackboost","gam" 
+                                   ,"nb","lda","pls","rpart","BstLm","bstSm","bstTree","cforest"
+                                   ,"earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
+                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag"
+                                   ,"naive_bayes","pda","qda","ranger","rda","sda","stepLDA","xgbLinear","xgbTree","xgbDART")
+                         ,search="random"
+                         ,tuneLength=10
+                         ,k=10,nthread=10)
+
+baseModels_churn2=ml_list(data=train_churn,target = "Churn",params = params_grid2,summaryFunction=twoClassSummary)

@@ -26,13 +26,4 @@ baseModels_churn=ml_list(data=train_churn,target = "Churn",params = params_grid,
 # # total time for all models.
 # timeRecordR()%>%filter(output_message!="None")%>%summarise(tot_time=sum(run_time))/3600
 
-params_grid2=expand.grid(sampling=c("up","down","smote","rose")
-                         ,metric=c("ROC")
-                         ,method=c("glmnet","bagEarth" ,"bagFDA","bartMachine", "binda","blackboost" 
-                                   ,"nb","lda","pls","rpart","BstLm","bstSm","bstTree","cforest","earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
-                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag","naive_bayes","pda","qda","ranger","rda","sda","stepLDA")
-                         ,search="random"
-                         ,tuneLength=10
-                         ,k=10,nthread=10)
 
-baseModels_churn2=ml_list(data=train_churn,target = "Churn",params = params_grid2,summaryFunction=twoClassSummary)
