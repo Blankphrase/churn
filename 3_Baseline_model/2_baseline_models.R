@@ -17,18 +17,57 @@ params_grid2=expand.grid(sampling=c("down")
                          ,tuneLength=10
                          ,k=10,nthread=10)
 
-baseModels_churn2=ml_list(data=train_churn,target = "Churn",params = params_grid2,summaryFunction=twoClassSummary)
+baseModels_churn2_down=ml_list(data=train_churn,target = "Churn",params = params_grid2,summaryFunction=twoClassSummary)
 
 # example use of ml_bwplot
-ml_bwplot(baseModels_churn2)
+ml_bwplot(baseModels_churn2_down)
 
-# example use of ml_cv_filter
-testmodels_metric_filtered=baseModels_churn2%>%ml_cv_filter(metric="ROC",mini=0.82,FUN=median)
+# example use of ml_cv_filter and ml_cor_filter
+ # first select models with median ROC bigger than 0.82
+ # second select models with correlation less than 0.75
+ # third select models with Sens bigger than 0.6
+ # fourth select models with Spec bigger than 0.8
+baseModels_churn2_down_filtered=baseModels_churn2_down%>%ml_cv_filter(metric="ROC",mini=0.82,FUN=median)%>%
+  ml_cor_filter(cor_level = 0.75)%>%ml_cv_filter(metric = "Sens",mini = 0.6,FUN=median)%>%ml_cv_filter(metric="Spec",mini=0.8,FUN=median)
 
 
-# example use of ml_cor_filter 
-low_cor_models_churn=testmodels_metric_filtered%>%ml_cor_filter(cor_level = 0.75)
 
-# get rid of low spec models.
 
-higer_spec_models=low_cor_models_churn%>%ml_cv_filter(metric = "ROC",mini = 0.6,FUN=median)
+#==================================================================================
+
+
+# get rid of pls model since it took 4hrs already. 
+params_grid3=expand.grid(sampling=c("smote","rose")
+                         ,metric=c("ROC")
+                         ,method=c("bayesglm","glm","glmStepAIC","C5.0","C5.0Rules","C5.0Tree","rf","RRFglobal","wsrf","glmnet"
+                                   ,"bagEarth" ,"bagFDA","bartMachine", "binda","blackboost","gam" 
+                                   ,"nb","lda","rpart","BstLm","bstSm","bstTree","cforest"
+                                   ,"earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
+                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag"
+                                   ,"naive_bayes","pda","qda","ranger","rda","sda","stepLDA","xgbLinear","xgbTree","xgbDART")
+                         ,search="random"
+                         ,tuneLength=10
+                         ,k=10,nthread=10)
+
+baseModels_churn2_smote=ml_list(data=train_churn,target = "Churn",params = params_grid3,summaryFunction=twoClassSummary)
+
+timeRecordR()%>%filter(output_message!="None")
+
+#=================================================================================
+
+# get rid of pls model since it took 4hrs already. 
+params_grid4=expand.grid(sampling=c("up")
+                         ,metric=c("ROC")
+                         ,method=c("bayesglm","glm","glmStepAIC","C5.0","C5.0Rules","C5.0Tree","rf","RRFglobal","wsrf","glmnet"
+                                   ,"bagEarth" ,"bagFDA","bartMachine", "binda","blackboost","gam" 
+                                   ,"nb","lda","rpart","BstLm","bstSm","bstTree","cforest"
+                                   ,"earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
+                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag"
+                                   ,"naive_bayes","pda","qda","ranger","rda","sda","stepLDA","xgbLinear","xgbTree","xgbDART")
+                         ,search="random"
+                         ,tuneLength=10
+                         ,k=10,nthread=10)
+
+baseModels_churn2_up=ml_list(data=train_churn,target = "Churn",params = params_grid4,summaryFunction=twoClassSummary)
+
+timeRecordR()%>%filter(output_message!="None")
