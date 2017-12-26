@@ -17,7 +17,7 @@ params_grid2=expand.grid(sampling=c("down")
                          ,tuneLength=10
                          ,k=10,nthread=10)
 
-baseModels_churn2_down=ml_list(data=train_churn,target = "Churn",params = params_grid2,summaryFunction=twoClassSummary)
+baseModels_churn2_down=ml_list(data=train_churn,target = "Churn",params = params_grid2,summaryFunction=twoClassSummary,save_model = "down_sampling")
 
 # example use of ml_bwplot
 ml_bwplot(baseModels_churn2_down)
@@ -27,8 +27,8 @@ ml_bwplot(baseModels_churn2_down)
  # second select models with correlation less than 0.75
  # third select models with Sens bigger than 0.6
  # fourth select models with Spec bigger than 0.8
-baseModels_churn2_down_filtered=baseModels_churn2_down%>%ml_cv_filter(metric="ROC",mini=0.82,FUN=median)%>%
-  ml_cor_filter(cor_level = 0.75)%>%ml_cv_filter(metric = "Sens",mini = 0.6,FUN=median)%>%ml_cv_filter(metric="Spec",mini=0.8,FUN=median)
+#baseModels_churn2_down_filtered=baseModels_churn2_down%>%ml_cv_filter(metric="ROC",mini=0.82,FUN=median)%>%
+ # ml_cor_filter(cor_level = 0.75)%>%ml_cv_filter(metric = "Sens",mini = 0.6,FUN=median)%>%ml_cv_filter(metric="Spec",mini=0.8,FUN=median)
 
 
 
@@ -49,7 +49,8 @@ params_grid3=expand.grid(sampling=c("smote","rose")
                          ,tuneLength=10
                          ,k=10,nthread=10)
 
-baseModels_churn2_smote=ml_list(data=train_churn,target = "Churn",params = params_grid3,summaryFunction=twoClassSummary)
+baseModels_churn2_smote_rose=ml_list(data=train_churn,target = "Churn",params = params_grid3,summaryFunction=twoClassSummary,save_model = "smote_and_rose_sampling")
+ml_bwplot(baseModels_churn2_smote_rose)
 
 timeRecordR()%>%filter(output_message!="None")
 
@@ -62,12 +63,22 @@ params_grid4=expand.grid(sampling=c("up")
                                    ,"bagEarth" ,"bagFDA","bartMachine", "binda","blackboost","gam" 
                                    ,"nb","lda","rpart","BstLm","bstSm","bstTree","cforest"
                                    ,"earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
-                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag"
+                                   ,"gbm","hda","hdda","knn","Logitboost","logicbag"
                                    ,"naive_bayes","pda","qda","ranger","rda","sda","stepLDA","xgbLinear","xgbTree","xgbDART")
                          ,search="random"
                          ,tuneLength=10
                          ,k=10,nthread=10)
 
-baseModels_churn2_up=ml_list(data=train_churn,target = "Churn",params = params_grid4,summaryFunction=twoClassSummary)
-
+baseModels_churn2_up=ml_list(data=train_churn,target = "Churn",params = params_grid4,summaryFunction=twoClassSummary,save_model = "up_sampling")
+ml_bwplot(baseModels_churn2_up)
 timeRecordR()%>%filter(output_message!="None")
+# # # =====================
+#  params_grid5=expand.grid(sampling=c("down")
+#                           ,metric=c("ROC")
+#                           ,method=c("bayesglm","glm","glmnet")
+#                           ,search="random"
+#                           ,tuneLength=10
+#                           ,k=10,nthread=10)
+# 
+#  baseModels_churn2_testmodels=ml_list(data=train_churn,target = "Churn",params = params_grid5,summaryFunction=twoClassSummary,save_model = "test_models")
+# 
