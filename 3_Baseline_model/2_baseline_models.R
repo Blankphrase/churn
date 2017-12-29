@@ -3,19 +3,37 @@ source("https://raw.githubusercontent.com/edwardcooper/mlmodel_select/master/ml_
 # load the clean data with deleted highly correlated columns.
 source("https://raw.githubusercontent.com/edwardcooper/churn/master/2_Data_Clean/data_clean_low_cor.R")
 
+
+
+#####################
+# select models from here. 
+
+# get the method names for all classification models in caret.
+
+method_vector=caret::modelLookup()%>%filter(forClass)%>%select(model)%>%unique%>%as.matrix%>%as.vector()
+
+# build a black list of model names. 
+# bartmachine sometimes crashes, and gamboost takes a lot of memory. More than rf models. 
+# elm just put the entire system into a sleep mode, not responding from the console and no program running(the worst kind of error).
+# awnb and awtan just did not work 
+# binda BstLm bstSm bstTree did not work
+# chaid could not install the library.
+# CSimca","ctree","ctree2 not sure about the error but the program moves on. 
+black_list=c("bartMachine","gamboost","awnb","awtan","bag","binda","BstLm","bstSm","bstTree","chaid","CSimca","ctree","ctree2","elm","extraTrees")
+
+method_vector=method_vector[!method_vector %in% black_list]
+
+install_pkg_model_names(method_vector)
 ###############################################
 # get rid of pls model since it took 4hrs already. 
 params_grid2=expand.grid(sampling=c("down")
                          ,metric=c("ROC")
-                         ,method=c("bayesglm","glm","glmStepAIC","C5.0","C5.0Rules","C5.0Tree","rf","RRFglobal","wsrf","glmnet"
-                                   ,"bagEarth" ,"bagFDA","bartMachine", "binda","blackboost","gam" 
-                                   ,"nb","lda","rpart","BstLm","bstSm","bstTree","cforest"
-                                   ,"earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
-                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag"
-                                   ,"naive_bayes","pda","qda","ranger","rda","sda","stepLDA","xgbLinear","xgbTree","xgbDART")
+                         ,method=method_vector
+                         ,preProcess=list(c("center","scale"))
                          ,search="random"
                          ,tuneLength=10
                          ,k=10,nthread=10)
+
 
 baseModels_churn2_down=ml_list(data=train_churn,target = "Churn",params = params_grid2,summaryFunction=twoClassSummary,save_model = "down_sampling")
 
@@ -39,12 +57,7 @@ ml_bwplot(baseModels_churn2_down)
 # get rid of pls model since it took 4hrs already. 
 params_grid3=expand.grid(sampling=c("smote","rose")
                          ,metric=c("ROC")
-                         ,method=c("bayesglm","glm","glmStepAIC","C5.0","C5.0Rules","C5.0Tree","rf","RRFglobal","wsrf","glmnet"
-                                   ,"bagEarth" ,"bagFDA","bartMachine", "binda","blackboost","gam" 
-                                   ,"nb","lda","rpart","BstLm","bstSm","bstTree","cforest"
-                                   ,"earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
-                                   ,"gbm","gamboost","hda","hdda","knn","Logitboost","logicbag"
-                                   ,"naive_bayes","pda","qda","ranger","rda","sda","stepLDA","xgbLinear","xgbTree","xgbDART")
+                         ,method=method_vector
                          ,search="random"
                          ,tuneLength=10
                          ,k=10,nthread=10)
@@ -59,12 +72,7 @@ timeRecordR()%>%filter(output_message!="None")
 # get rid of pls model since it took 4hrs already. 
 params_grid4=expand.grid(sampling=c("up")
                          ,metric=c("ROC")
-                         ,method=c("bayesglm","glm","glmStepAIC","C5.0","C5.0Rules","C5.0Tree","rf","RRFglobal","wsrf","glmnet"
-                                   ,"bagEarth" ,"bagFDA","bartMachine", "binda","blackboost","gam" 
-                                   ,"nb","lda","rpart","BstLm","bstSm","bstTree","cforest"
-                                   ,"earth","elm","evtree","extraTrees","fda","ctree","ctree2","deepboost"
-                                   ,"gbm","hda","hdda","knn","Logitboost","logicbag"
-                                   ,"naive_bayes","pda","qda","ranger","rda","sda","stepLDA","xgbLinear","xgbTree","xgbDART")
+                         ,method=method_vector
                          ,search="random"
                          ,tuneLength=10
                          ,k=10,nthread=10)
@@ -72,13 +80,3 @@ params_grid4=expand.grid(sampling=c("up")
 baseModels_churn2_up=ml_list(data=train_churn,target = "Churn",params = params_grid4,summaryFunction=twoClassSummary,save_model = "up_sampling")
 ml_bwplot(baseModels_churn2_up)
 timeRecordR()%>%filter(output_message!="None")
-# # # =====================
-#  params_grid5=expand.grid(sampling=c("down")
-#                           ,metric=c("ROC")
-#                           ,method=c("bayesglm","glm","glmnet")
-#                           ,search="random"
-#                           ,tuneLength=10
-#                           ,k=10,nthread=10)
-# 
-#  baseModels_churn2_testmodels=ml_list(data=train_churn,target = "Churn",params = params_grid5,summaryFunction=twoClassSummary,save_model = "test_models")
-# 
