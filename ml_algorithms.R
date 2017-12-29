@@ -19,15 +19,17 @@ black_list=c("bartMachine","gamboost","awnb","awtan","bag","binda","BstLm","bstS
              , "RFlda","rfRules","rocc","rmda","rpartScore","rpartCost","rrlda","RSimca","SLAVE","smda","snn","svmLinear3"
              ,"svmSpectrumString","vglmAdjCat","vglmContRatio","vglmCumulative","vbmpRadial")
 # do grey list only if the data size is small. 
-grey_list=c("glmboost","gaussprLinear","gaussprPoly","gaussprRadial","svmLinearWeights","svmLinearWeights2","widekernelpls","tanSearch","tan","svmRadialSigma")
+grey_list=c("glmboost","gaussprLinear","gaussprPoly","gaussprRadial","svmLinearWeights","svmLinearWeights2","widekernelpls","tanSearch","tan","svmRadialSigma","mxnet","mxnetAdam")
 # do lda or lda2 with center scale and pca
 # loclda also needs pca 
-white_list=c("gbm_h2o","gcvEarth","glm","glmnet","glmnet_h2o","glmStepAIC","kernelpls","LMT"
+white_list=c("gbm_h2o","gcvEarth","glm","glmnet","glmnet_h2o","glmStepAIC","kernelpls"
              ,"mlpKerasDecay","mlpKerasDecayCost","mlpKerasDropout","mlpSGD","mlpWeightDecay"
              ,"msaenet","multinom","nnet","ordinalNet","ORFlog","ORFpls","ORFridge","parRF","pcaNNet","pda"
-             ,"plr","ranger","rlda","rotationForest","sda","sdwd","simpls","sparseLDA","spls","svmLinear","svmPoly","svmRadialCost","wsrf","xgbDART","xgbLinear","xgbTree")
+             ,"plr","ranger","rlda","rotationForest","sda","sdwd","simpls","sparseLDA","spls","svmLinear","svmPoly","svmRadialCost","wsrf","xgbDART","xgbLinear","xgbTree","LMT","OneR")
 method_vector=method_vector[!method_vector %in% black_list]
 method_vector=method_vector[!method_vector %in% grey_list]
 
-method_vector
-# ml_tune(data=train_churn,target="Churn",method="",metric="ROC")
+
+rm(black_list)
+rm(white_list)
+rm(grey_list)

@@ -4,24 +4,12 @@ source("https://raw.githubusercontent.com/edwardcooper/mlmodel_select/master/ml_
 source("https://raw.githubusercontent.com/edwardcooper/churn/master/2_Data_Clean/data_clean_low_cor.R")
 
 
-
 #####################
 # select models from here. 
 
-# get the method names for all classification models in caret.
+# select the algorithms. 
 
-method_vector=caret::modelLookup()%>%filter(forClass)%>%select(model)%>%unique%>%as.matrix%>%as.vector()
-
-# build a black list of model names. 
-# bartmachine sometimes crashes, and gamboost takes a lot of memory. More than rf models. 
-# elm just put the entire system into a sleep mode, not responding from the console and no program running(the worst kind of error).
-# awnb and awtan just did not work 
-# binda BstLm bstSm bstTree did not work
-# chaid could not install the library.
-# CSimca","ctree","ctree2 not sure about the error but the program moves on. 
-black_list=c("bartMachine","gamboost","awnb","awtan","bag","binda","BstLm","bstSm","bstTree","chaid","CSimca","ctree","ctree2","elm","extraTrees")
-
-method_vector=method_vector[!method_vector %in% black_list]
+source('~/Dropbox/churn/ml_algorithms.R', echo=TRUE)
 
 install_pkg_model_names(method_vector)
 ###############################################
