@@ -17,19 +17,22 @@ black_list=c("bartMachine","gamboost","awnb","awtan","bag","binda","BstLm","bstS
              ,"gpls","hda","J48","JRip","kknn","logicBag","logreg","lssvmLinear","lssvmPoly","lssvmRadial","lvq","manb"
              ,"mda","Mlda","nbDiscrete","nbSearch","ownn","partDSA","polr","protoclass","qda","QdaCov","Rborist","rFerns"
              , "RFlda","rfRules","rocc","rmda","rpartScore","rpartCost","rrlda","RSimca","SLAVE","smda","snn","svmLinear3"
-             ,"svmSpectrumString","vglmAdjCat","vglmContRatio","vglmCumulative","vbmpRadial")
+             ,"svmSpectrumString","vglmAdjCat","vglmContRatio","vglmCumulative","vbmpRadial","PRIM")
 # do grey list only if the data size is small. 
-grey_list=c("glmboost","gaussprLinear","gaussprPoly","gaussprRadial","svmLinearWeights","svmLinearWeights2","widekernelpls","tanSearch","tan","svmRadialSigma","mxnet","mxnetAdam")
+grey_list=c("glmboost","gaussprLinear","gaussprPoly","gaussprRadial","svmLinearWeights","svmLinearWeights2","widekernelpls","tanSearch","tan","svmRadialSigma","mxnet","mxnetAdam","ordinalNet")
+
+non_sequential_list=c("mlpKerasDecay","mlpKerasDecayCost","mlpKerasDropout")
 # do lda or lda2 with center scale and pca
 # loclda also needs pca 
 white_list=c("gbm_h2o","gcvEarth","glm","glmnet","glmnet_h2o","glmStepAIC","kernelpls"
-             ,"mlpKerasDecay","mlpKerasDecayCost","mlpKerasDropout","mlpSGD","mlpWeightDecay"
-             ,"msaenet","multinom","nnet","ordinalNet","ORFlog","ORFpls","ORFridge","parRF","pcaNNet","pda"
+             ,"mlpSGD","mlpWeightDecay"
+             ,"msaenet","multinom","nnet","ORFlog","ORFpls","ORFridge","parRF","pcaNNet","pda"
              ,"plr","ranger","rlda","rotationForest","sda","sdwd","simpls","sparseLDA","spls","svmLinear","svmPoly","svmRadialCost","wsrf","xgbDART","xgbLinear","xgbTree","LMT","OneR")
-method_vector=method_vector[!method_vector %in% black_list]
-method_vector=method_vector[!method_vector %in% grey_list]
-
-
+# method_vector=method_vector[!method_vector %in% black_list]
+# method_vector=method_vector[!method_vector %in% grey_list]
+# method_vector=method_vector[!method_vector %in% non_sequential_list ]
+method_vector=c(white_list,non_sequential_list)
 rm(black_list)
 rm(white_list)
 rm(grey_list)
+rm(non_sequential_list)

@@ -41,11 +41,11 @@ ml_bwplot(baseModels_churn2_down)
 
 #==================================================================================
 
-
+method_vector2=method_vector[!method_vector %in% "svmPoly"]
 # get rid of pls model since it took 4hrs already. 
 params_grid3=expand.grid(sampling=c("smote","rose")
                          ,metric=c("ROC")
-                         ,method=method_vector
+                         ,method=method_vector2
                          ,search="random"
                          ,tuneLength=10
                          ,k=10,nthread=10)
@@ -60,7 +60,7 @@ timeRecordR()%>%filter(output_message!="None")
 # get rid of pls model since it took 4hrs already. 
 params_grid4=expand.grid(sampling=c("up")
                          ,metric=c("ROC")
-                         ,method=method_vector
+                         ,method=method_vector2
                          ,search="random"
                          ,tuneLength=10
                          ,k=10,nthread=10)
