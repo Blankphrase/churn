@@ -24,7 +24,7 @@ churn_impute1_dummy$TotalCharges=log10(churn_impute1_dummy$TotalCharges)
 churn_impute1_dummy$MonthlyCharges=log10(churn_impute1_dummy$MonthlyCharges)
 
 summary(churn_impute1_dummy%>%preProcess(c("center","scale"))%>%predict(churn_impute1_dummy))
-
+churn_impute1_dummy$genderFemale=NULL
 # rm the non-clean data 
 rm(churn)
 rm(churn_impute1)
