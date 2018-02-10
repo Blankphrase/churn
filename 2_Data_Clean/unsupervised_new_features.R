@@ -36,31 +36,35 @@ rm(churn_impute1)
 # kmeans
 
 churn_impute1_dummy$kmeans=churn_impute1_dummy%>%select(-Churn)%>%kmeans(centers=100,nstart = 100, iter.max = 100)%>%fitted(method="class")
-
+message("kmeans done")
 ## dbscan family
 library(dbscan)
 
 # dbscan
 churn_impute1_dummy$dbscan=churn_impute1_dummy%>%select(-Churn)%>%dbscan(eps=2.45,minPts = 5)%>%.$cluster
+message("dbscan done")
 
 # hdbscan
 churn_impute1_dummy$hdbscan=churn_impute1_dummy%>%select(-Churn)%>%hdbscan(minPts = 5)%>%.$cluster
+message("hdbscan done")
 
 # jpclust
 churn_impute1_dummy$jpcluster=churn_impute1_dummy%>%select(-Churn)%>%jpclust(k=100,kt=10)%>%.$cluster
+message("jpclust done")
 
 # optics with two extract 
 
 churn_impute1_dummy$optics_db=churn_impute1_dummy%>%select(-Churn)%>%optics(eps = 2.42,minPts = 5)%>%extractDBSCAN(eps_cl = 10)%>%.$cluster
 churn_impute1_dummy$optics_xi=churn_impute1_dummy%>%select(-Churn)%>%optics(eps = 2.42,minPts = 5)%>%extractXi(xi=0.1)%>%.$cluster
+message("optics done")
 
 # snnclust
 churn_impute1_dummy$snncluster=churn_impute1_dummy%>%select(-Churn)%>%sNNclust(k=15,eps=2.42,minPts = 5)%>%.$cluster
-
+message("snnclust done")
 
 # hclust
 churn_impute1_dummy$hcluster=hclust(dist(churn_impute1_dummy%>%select(-Churn)))%>%cutree(k=100)
-glimpse(churn_impute1_dummy)
+message("hclust done")
 
 # change all int into dbl
 int_to_dbl=function(data){
@@ -73,4 +77,23 @@ int_to_dbl=function(data){
 }
 
 churn_impute1_dummy=int_to_dbl(churn_impute1_dummy)
-glimpse(churn_impute1_dummy)
+
+rm(int_to_dbl)
+# split the data into three parts
+
+# do a train, dev, test data split as suggested by Andrew Ng. 
+set.seed(7)
+index1=createDataPartition(churn_impute1_dummy$Churn,p=0.7,list = FALSE)
+train_churn=churn_impute1_dummy[index1,]
+intermediate_churn=churn_impute1_dummy[-index1,]
+# split rest of the data into dev and test set. 
+set.seed(7)
+index2=createDataPartition(intermediate_churn$Churn,p=0.5,list = FALSE)
+
+test_churn=intermediate_churn[index2,]
+dev_churn=intermediate_churn[-index2,]
+
+rm(index1,index2,intermediate_churn)
+# the final output of this script is the cleaned data ready to be fed into a machine learning algorithm. 
+
+message("The data is ready for machine learning model training.")
