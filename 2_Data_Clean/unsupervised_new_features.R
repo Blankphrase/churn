@@ -82,7 +82,7 @@ rm(int_to_dbl)
 
 
 # get rid of highly correlated data. 
-high_cor_index=(churn_impute1_dummy%>%select(-Churn)%>%cor%>%findCorrelation(cutoff = 0.9,exact=TRUE))+1
+high_cor_index=(churn_impute1_dummy%>%select(-Churn)%>%cor%>%findCorrelation(cutoff = 0.85,exact=TRUE))+1
 churn_impute1_dummy=churn_impute1_dummy[,-high_cor_index]
 
 # split the data into three parts
